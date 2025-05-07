@@ -12,3 +12,7 @@ Sigs:
 -   verbs
 -   adjectives
 -   etc.
+
+
+Excluded items for simplification of our model:
+- Nouns which follow verbs but are not their objects (e.g. He is a teacher, She died a hero, Tim became president). 
