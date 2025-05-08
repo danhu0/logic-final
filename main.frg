@@ -129,12 +129,36 @@ pred adjectivesBeforeNoun {
         (a in a.describedNoun.^next and (some v: Verb | {
             a.describedNoun = v.subject //or the it's after the noun, which is the subject of a preceding verb: e.g. the cat was blue
             a in v.^next //and the adjective is after the verb
+            v.transitive = False
         })) 
     }
 }
 
+pred adverbsBeforeVerb {
+    all a: Adverb | {
+        ((a.describedVerb in a.^next) and //either adverb is before the verb
+        (all w: partOfSpeech | { // (and nothing in between them but maybe more adverbs)
+            w in (a.^next - a.describedVerb.^next - a.describedVerb) implies
+            (w in Adverb or w in CoordinatingConjunction) // e.g. he quickly and quietly ran
+        }))
+        or ((a in a.describedVerb.^next) and
+        (all w: partOfSpeech | { // (and nothing in between them but maybe more adverbs)
+            w in (a.describedVerb.^next - a.^next - a) implies
+            (w in Adverb or w in CoordinatingConjunction) // e.g. he ran quickly and quietly
+        }))
+        
+        
+        // or
+        // (a in a.describedVerb.^next and (some v: Verb | {
+        //     a.describedVerb = v.subject //or the it's after the verb, which is the subject of a preceding verb: e.g. the cat was blue
+        //     a in v.^next //and the adjective is after the verb
+        //     v.transitive = False
+        // })) 
+    }
+}
+
 pred adjOrdering {
-    
+    //make sure to allow for coordinating conjunctions in between - not sure if as many as you want but maybe?
 }
 
 pred coordinatingConjunctions {
@@ -175,6 +199,7 @@ pred coordinatingConjunctions {
             a1.next = c //case 4: cc splitting two adverbs
             c.next = a2 //(adverbs can't have other parts of speech in between them -- unless they are dependent clauses)
         }}
+
     }
 }
 
@@ -212,8 +237,7 @@ pred taiwaneseBill { //"Old and Taiwanese Bill ran."
 
 run {
     validSentence
-    taiwaneseBill
-} for exactly 1 Origin, exactly 1 Age, exactly 1 Noun, exactly 1 Verb, exactly 1 Punctuation, exactly 1 CoordinatingConjunction for {next is linear}
+} for exactly 1 Shape, exactly 1 Noun, exactly 2 Verb, exactly 1 Punctuation, exactly 1 CoordinatingConjunction for {next is linear}
 
 
 

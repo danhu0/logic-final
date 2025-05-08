@@ -18,3 +18,5 @@ Excluded items for simplification of our model:
 - Nouns which follow verbs but are not their objects (e.g. He is a teacher, She died a hero, Tim became president). 
 
 stretch goal: establish clauses that can either stand on their own as sentences or be joined by coordinating conjunctions with a preceding comma, and set all the main preds to evaluate clauses rather than "all words"
+
+finding sentences we didn't realize were correct: noun verb and verb adj. e.g. "he was and wasn't blue"
