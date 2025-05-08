@@ -1,5 +1,7 @@
 #lang forge
 
+// option run_sterling "viz.js"
+
 abstract sig Boolean{}
 one sig True, False extends Boolean {}
 
@@ -10,18 +12,30 @@ abstract sig partOfSpeech {
 
 sig Noun extends partOfSpeech{}
 sig Verb extends partOfSpeech{
-    subject: one Noun,
-    object: lone Noun,
+    subject: set Noun,
+    object: set Noun,
     transitive: one Boolean
 }
-sig Adjective extends partOfSpeech{
-    
+abstract sig Adjective extends partOfSpeech{
+    describedNoun: one Noun 
 }
-sig Adverb extends partOfSpeech{}
+sig Determiner extends Adjective{} //e.g. a, an, the
+sig Quantity extends Adjective{} //e.g. four, many, few
+sig Opinion extends Adjective{} //e.g. good, bad
+sig Size extends Adjective{} //e.g. big, small
+sig Shape extends Adjective{} //e.g. round, square
+sig Condition extends Adjective{} //e.g. broken, clean
+sig Age extends Adjective{} //e.g. old, young
+sig Color extends Adjective{} //e.g. green, yellow
+sig Origin extends Adjective{} //e.g. Brazilian, Russian
+sig Material extends Adjective{} //e.g. antique, new
+sig Purpose extends Adjective{} //e.g. gardening, running
+
+sig Adverb extends partOfSpeech{
+    describedVerb: one Verb
+}
 sig CoordinatingConjunction extends partOfSpeech{}
-sig Article extends partOfSpeech{}
 sig Punctuation extends partOfSpeech {}
-sig Pronoun extends partOfSpeech{}
 
 //There is a first word and it's capitalized
 pred firstWordCapitalized {
@@ -34,7 +48,6 @@ pred firstWordCapitalized {
 //No floating words
 pred allWordsInSentence {
     some w: partOfSpeech | {
-        //w.next
         all w2: partOfSpeech | {
             w2!=w implies w2 in w.^next
         }
@@ -82,9 +95,12 @@ pred nounBeforeVerb {
     }
 }
 
-pred subjectNotObject {
+pred subjectNotAndBeforeObject {
     //subject is not object
-    all v: Verb | {v.subject != v.object} //subject and object are not the same
+    all v: Verb | {
+        v.subject != v.object //subject and object are not the same
+        v.object in v.subject.^next //object comes after subject
+    }
 }
 
 //Intransitive verbs shouldn't have a noun directly after them
@@ -101,10 +117,64 @@ pred intransitiveMeansNoObject {
         }
     }
 }
-//the verb needs to come after the subject to which it refers
 
-//the verb needs to come before the object to which it refers
+pred adjectivesBeforeNoun {
+    all a: Adjective | {
+        (a.describedNoun in a.^next and //either adjective is before the noun
+        (all w: partOfSpeech | { // (and nothing in between them but maybe more adjectives)
+            w in (a.^next - a.describedNoun.^next - a.describedNoun) implies
+            w in Adjective // e.g. the big blue cat ...
+        }))
+        or
+        (a in a.describedNoun.^next and (some v: Verb | {
+            a.describedNoun = v.subject //or the it's after the noun, which is the subject of a preceding verb: e.g. the cat was blue
+            a in v.^next //and the adjective is after the verb
+        })) 
+    }
+}
+
+pred adjOrdering {
     
+}
+
+pred coordinatingConjunctions {
+    //cannot be be noun verb coordinating conjunction noun
+    // no n: Noun | {
+    //     n.next in Verb
+    //     n.next.next in CoordinatingConjunction
+    //     n.next.next.next in Noun
+    // }
+
+    all c: CoordinatingConjunction | {
+        some disj n1, n2: Noun | { //case 1: cc spliitting two nouns
+            n2 in n1.^next
+            c in n1.^next
+            c not in n2.^next
+            (all w: partOfSpeech | { // which could have adjectives in between them
+                w in (n1.^next - n2.^next - n2 - c) implies
+                w in Adjective
+            }) 
+        }
+        some disj v1, v2: Verb | { //case 2: cc splitting two verbs
+            v2 in v1.^next
+            c in v1.^next
+            c not in v2.^next
+            (all w: partOfSpeech | { // which could have adverbs in between them
+                w in (v1.^next - v2.^next - v2 - c) implies
+                w in Adverb
+            }) 
+        }
+        
+    }
+}
+
+pred allVerbsHaveSubject {
+    all v: Verb | {
+        #(v.subject) > 0 //all verbs have at least one subject
+    }
+}
+//can we infinitely add adjectives? Extendable sentences
+
 
 //Valid sentence
 pred validSentence{
@@ -115,9 +185,15 @@ pred validSentence{
     wellformedCapitalization
     nounBeforeVerb
     intransitiveMeansNoObject
-    subjectNotObject
+    subjectNotAndBeforeObject
+    adjectivesBeforeNoun
+    allVerbsHaveSubject
 }
 
 run {
     validSentence
-} for exactly 2 Noun, 1 Verb, 1 Punctuation for {next is linear}
+} for exactly 1 Origin, exactly 1 Age, exactly 1 Noun, exactly 1 Verb, exactly 1 Punctuation for {next is linear}
+
+
+
+// https://csci1710.github.io/forge-documentation/sterling/custom-basics.html
