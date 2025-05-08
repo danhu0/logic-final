@@ -123,7 +123,7 @@ pred adjectivesBeforeNoun {
         (a.describedNoun in a.^next and //either adjective is before the noun
         (all w: partOfSpeech | { // (and nothing in between them but maybe more adjectives)
             w in (a.^next - a.describedNoun.^next - a.describedNoun) implies
-            w in Adjective // e.g. the big blue cat ...
+            (w in Adjective or w in CoordinatingConjunction) // e.g. the big blue cat ... / the big and blue cat ...
         }))
         or
         (a in a.describedNoun.^next and (some v: Verb | {
@@ -146,7 +146,7 @@ pred coordinatingConjunctions {
     // }
 
     all c: CoordinatingConjunction | {
-        some disj n1, n2: Noun | { //case 1: cc spliitting two nouns
+        {some disj n1, n2: Noun | { //case 1: cc spliitting two nouns
             n2 in n1.^next
             c in n1.^next
             c not in n2.^next
@@ -154,8 +154,9 @@ pred coordinatingConjunctions {
                 w in (n1.^next - n2.^next - n2 - c) implies
                 w in Adjective
             }) 
-        }
-        some disj v1, v2: Verb | { //case 2: cc splitting two verbs
+        }}
+        or
+        {some disj v1, v2: Verb | { //case 2: cc splitting two verbs
             v2 in v1.^next
             c in v1.^next
             c not in v2.^next
@@ -163,8 +164,17 @@ pred coordinatingConjunctions {
                 w in (v1.^next - v2.^next - v2 - c) implies
                 w in Adverb
             }) 
-        }
-        
+        }}
+        or
+        {some disj a1, a2: Adjective | {
+            a1.next = c //case 3: cc splitting two adjectives
+            c.next = a2 //(adjectives can't have other parts of speech in between them -- unless they are dependent clauses)
+        }}
+        or
+        {some disj a1, a2: Adverb | {
+            a1.next = c //case 4: cc splitting two adverbs
+            c.next = a2 //(adverbs can't have other parts of speech in between them -- unless they are dependent clauses)
+        }}
     }
 }
 
@@ -181,18 +191,29 @@ pred validSentence{
     firstWordCapitalized
     allWordsInSentence
     endsWithPunctuation
-    wellformedPunctuation
     wellformedCapitalization
     nounBeforeVerb
     intransitiveMeansNoObject
     subjectNotAndBeforeObject
     adjectivesBeforeNoun
     allVerbsHaveSubject
+    coordinatingConjunctions
+}
+
+pred taiwaneseBill { //"Old and Taiwanese Bill ran."
+    some a: Age | {
+        a.next in CoordinatingConjunction
+        a.next.next in Origin
+        a.next.next.next in Noun
+        a.next.next.next.next in Verb
+        a.next.next.next.next.next in Punctuation
+    }
 }
 
 run {
     validSentence
-} for exactly 1 Origin, exactly 1 Age, exactly 1 Noun, exactly 1 Verb, exactly 1 Punctuation for {next is linear}
+    taiwaneseBill
+} for exactly 1 Origin, exactly 1 Age, exactly 1 Noun, exactly 1 Verb, exactly 1 Punctuation, exactly 1 CoordinatingConjunction for {next is linear}
 
 
 
