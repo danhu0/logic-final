@@ -231,13 +231,22 @@ pred taiwaneseBill { //"Old and Taiwanese Bill ran." -- this is for testing
     }
 }
 
-run {
+twoVerb: run {
     validSentence
 } for exactly 1 Shape, exactly 1 Noun, exactly 2 Verb, exactly 1 Punctuation, exactly 1 CoordinatingConjunction for {next is linear}
 
-run {
+allOne: run {
     validSentence
 } for exactly 1 Origin, exactly 1 Age, exactly 1 Verb, exactly 1 Punctuation, exactly 1 Noun, exactly 1 CoordinatingConjunction for {next is linear}
+
+lotsofAdjectives: run {
+    validSentence
+} for exactly 2 Noun, exactly 1 Verb, exactly 5 Adjective, exactly 1 Punctuation for {next is linear}
+
+basicCase: run {
+    validSentence
+} for exactly 2 Noun, exactly 1 Verb, exactly 1 Punctuation for {next is linear}
+
 
 
 
