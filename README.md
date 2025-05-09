@@ -1,4 +1,6 @@
-# logic-final
+# grammar modeler
+
+Eitan Zemel, Oliver Kahn, Daniel Hu
 
 One tradeoff we initially made was the choice of using abstractions: "noun," "verb," etc. instead of specific words that carried semantic meaning. This was
 done in service of us being able to make general sentences where each word would fill a functional grammatical role, without us having to fuss at first
