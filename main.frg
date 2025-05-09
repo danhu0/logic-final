@@ -157,10 +157,6 @@ pred adverbsBeforeVerb {
     }
 }
 
-pred adjOrdering {
-    //make sure to allow for coordinating conjunctions in between - not sure if as many as you want but maybe?
-}
-
 pred coordinatingConjunctions {
     //cannot be be noun verb coordinating conjunction noun
     // no n: Noun | {
@@ -225,7 +221,7 @@ pred validSentence{
     coordinatingConjunctions
 }
 
-pred taiwaneseBill { //"Old and Taiwanese Bill ran."
+pred taiwaneseBill { //"Old and Taiwanese Bill ran." -- this is for testing
     some a: Age | {
         a.next in CoordinatingConjunction
         a.next.next in Origin
