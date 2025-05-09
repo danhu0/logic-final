@@ -26,5 +26,3 @@ remaining todo:
 - [ ] testing, generally
   - [ ] see about just testing with a bunch of partOfSpeech rather than specifiying and see how it does
 - [ ] adjective order
-- [ ] punctuation - reduce to only periods perhaps?
-- [ ] article - maybe just file them under determiners and perhaps allow special behavior for them?
