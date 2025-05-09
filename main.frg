@@ -1,6 +1,6 @@
 #lang forge
 
-// option run_sterling "viz.js"
+option run_sterling "viz.js"
 
 abstract sig Boolean{}
 one sig True, False extends Boolean {}
@@ -234,6 +234,10 @@ pred taiwaneseBill { //"Old and Taiwanese Bill ran." -- this is for testing
 run {
     validSentence
 } for exactly 1 Shape, exactly 1 Noun, exactly 2 Verb, exactly 1 Punctuation, exactly 1 CoordinatingConjunction for {next is linear}
+
+run {
+    validSentence
+} for exactly 1 Origin, exactly 1 Age, exactly 1 Verb, exactly 1 Punctuation, exactly 1 Noun, exactly 1 CoordinatingConjunction for {next is linear}
 
 
 

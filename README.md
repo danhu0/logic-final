@@ -13,34 +13,3 @@ Our model in the end of things, does not generate Escher or garden path sentence
 actual words.
 
 In the graph representation of our model's output, we have a linearly linked set of parts of speech, each of which denotes a noun, verb, adjective, coordinating conjunction, adverb, or punctuation. Each part of speech can be capitalized, verbs can be transitive or intransitive and keep track of their subjects and (potential) objects via pointesr. Adjectives and adverbs keep track of the word that they are describing. Our custom visualizer, shows relationships between objects in our program and their fields. For example, verbs show their subjects and objects, and nouns show whether or not they are capitalized. We also have a theme that cleans up the boolean fields and makes the graph representation easier to parse.
-
-We plan on modeling our sentances by first having sigs that model parts of speech, like nouns, verbs, adjectives, adverbs.
-The predicates will model grammatical rules like subject-verb-object agreement.
-
-Sigs:
-
-- sentence (list of words, periods, commas, etc.)
-- words (capitalized or not capitalized, etc.)
-
-- Types of words:
-- nouns
-- verbs
-- adjectives
-- etc.
-
-Excluded items for simplification of our model:
-
-- Nouns which follow verbs but are not their objects (e.g. He is a teacher, She died a hero, Tim became president).
-
-stretch goal: establish clauses that can either stand on their own as sentences or be joined by coordinating conjunctions with a preceding comma, and set all the main preds to evaluate clauses rather than "all words"
-
-finding sentences we didn't realize were correct: noun verb and verb adj. e.g. "he was and wasn't blue"
-
-remaining todo:
-
-- [ ] dependent clauses following coordinating conjunction (e.g. he went shopping and bought donuts)
-- [ ] testing, generally
-  - [ ] see about just testing with a bunch of partOfSpeech rather than specifiying and see how it does
-- [ ] adjective order
-- [ ] punctuation - reduce to only periods perhaps?
-- [ ] article - maybe just file them under determiners and perhaps allow special behavior for them?
